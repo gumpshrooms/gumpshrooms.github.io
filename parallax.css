@@ -8,7 +8,7 @@ font-family:"Arvo";
 font-weight:normal;
 font-size: 55px;
 text-align: center;
-color: #fff;
+color: #000;
 margin: 0;
 padding: 0;
 }
@@ -17,7 +17,7 @@ font-family:"Arvo";
 font-weight: normal;
 font-size: 40px;
 text-align: center;
-color: #fff;
+color: #000;
 margin: 0;
 padding: 0;
 }
@@ -42,7 +42,7 @@ position: fixed;
 margin-top: 30px;
 }
 #nav { width: 410px; float: right; margin-top: 20px; }
-#logo a { color: #fff; text-decoration: none; float: left; font-size: 30px; margin-top: 20px; color: #fff; font-family:"Wellfleet"; font-weight: bold; }
+#logo a { color: #000; text-decoration: none; float: left; font-size: 30px; margin-top: 20px; color: #000; font-family:"Wellfleet"; font-weight: bold; }
 #nav ul{
 list-style: none;
 display: block;
@@ -54,9 +54,9 @@ margin-top: 9px;
 float: left;
 padding-left: 21px;
 }
-#nav li a { color: #fff; opacity:0.6; font-size: 16px; text-decoration: none; font-family: 'Wellfleet'; }
-#nav li a.active { color: #fff; opacity:1; border-bottom: 2px solid #fff; }
-#nav li a:hover { color: #fff; opacity:1; }
+#nav li a { color: #000; opacity:0.6; font-size: 16px; text-decoration: none; font-family: 'Wellfleet'; }
+#nav li a.active { color: #000; opacity:1; border-bottom: 2px solid #000; }
+#nav li a:hover { color: #000; opacity:1; }
 .quotes {
 font-family: 'Goudy Bookletter 1911', serif;
 font-weight: normal;
@@ -65,7 +65,7 @@ text-align: left;
 margin: 50px auto;
 }
 
- .author_name_white { font-family:"Wellfleet"; margin: 70px 0 0 75px; color: #fff; font-size: 20px; } 
+ .author_name_white { font-family:"Wellfleet"; margin: 70px 0 0 75px; color: #000; font-size: 20px; } 
  .author_name_gray { font-family:"Wellfleet"; margin: 70px 0 0 75px; color: #94a4a4; font-size: 20px; } 
  .quotes_container { width: 800px; margin: 0 auto; }
 #christmas_tree { background: url('../img/christmas-tree.png')no-repeat; width: 48px; height: 77px; margin: 0 auto; position: relative; bottom: -35px;}
@@ -76,14 +76,14 @@ margin: 50px auto;
 #slide1, #slide2{ width: 100%; }
 #slide1{
 background:url('../img/slide1.jpg') 50% 0 no-repeat fixed;
-color: #fff;
+color: #000;
 height: 600px;
 margin: 0;
 padding: 200px 0 260px 0;
 background-size: cover;
 }
 #slide2{
-background-color: #fff;
+background-color: #000;
 color: #333333;
 height: 300px;
 margin: 0 auto;
@@ -92,13 +92,13 @@ padding: 200px 0;
 }
 #slide3{
 background: url(../img/slide3.jpg) 50% 0 no-repeat fixed;
-color: #fff;
+color: #000;
 height: 600px;
 padding: 170px 0 0 0;
 background-size: cover;
 }
 #slide4{
-background-color: #fff;
+background-color: #000;
 color: #333333;
 height: 300px;
 padding: 200px 0;
@@ -108,8 +108,8 @@ background: url(../img/slide5.jpg) 50% 0 no-repeat fixed;
 height: 200px;
 margin: 0 auto;
 padding: 250px 0;
-color: #fff;
+color: #000;
 background-size: cover;
 }
-#copyright { color: #fff; font-family:"Wellfleet"; font-size: 14px; margin-top: 100px; text-align: center; }
-#copyright a { text-decoration: none; color: #fff; }
+#copyright { color: #000; font-family:"Wellfleet"; font-size: 14px; margin-top: 100px; text-align: center; }
+#copyright a { text-decoration: none; color: #000; }
