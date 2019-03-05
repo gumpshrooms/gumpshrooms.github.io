@@ -30,6 +30,7 @@ margin: 5px 0;
 padding: 0;
 z-index: 1;
 position: relative;
+color: #000;
 }
 .center { margin: 0 auto; }
 .content{ margin: 0 auto; width: 960px; }
