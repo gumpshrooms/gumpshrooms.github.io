@@ -1,12 +1,32 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  </head>
-  <body>
-    <h1 style="text-align: center; font-family: Sans-Serif;">THE QUATERNARY PERIOD</h1>
-    <a href="/quaternaryparallax.html">Learn more about it!</a>
-    <a href="/cars.html">play unrelated car game</a>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>gumpshroom gambling</title>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+  <script src="script.js">
+	</script>
+</head>
+
+<body onload="update()">
+	<br>
+    <h1>Money Making Game</h1>
+    <br><button onclick="refresh()">Refresh Bets</button><br>
+    <div id="bet-container">
+    
+    </div>
+    <p><b>Your Bets:</b></p>
+    <div id="yourbet-container">
+
+    </div>
     <br>
-    <a href"/gambling-game/index.html"><h2>GAMBLE!</h2></a>
+    <p>You have <b><span id="shroomValue"></span></b> gumpshroom(s) on hand.</p>
+    <p>Make a bet:</p>
+    <input id="playerBet">
+    <button onclick="logBet()">Place Bet</button>
   </body>
 </html>
