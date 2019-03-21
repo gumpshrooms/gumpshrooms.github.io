@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width">
 	<title>gumpshroom gambling</title>
 	<link href="style.css" rel="stylesheet" type="text/css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+  <script src="jquery.min.js"></script>
+  <script src="notify.min.js"></script>
   <script src="script.js">
 	</script>
 </head>
@@ -28,5 +28,14 @@
     <p>Make a bet:</p>
     <input id="playerBet">
     <button onclick="logBet()">Place Bet</button>
+    <br>
+    <p><b>Custom amount of gumpshrooms:</b></p>
+    <input id="changeShrooms"></input>
+    <button onclick="changeShrooms()">Change'em!</button>
+    <br>
+    <p><b>Custom house cut (Current: <span id="houseCutValue"></span>%):</b></p>
+    <input id="changeHouseCut"></input>
+    <button onclick="changeHouseCut()">Change it up!</button>
+
   </body>
 </html>
