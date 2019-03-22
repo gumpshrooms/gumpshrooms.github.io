@@ -64,15 +64,21 @@ function logBet() {
       won: false,
       timer: (Math.random() * 10000) + 50
     };
+    
     var pBet = document.getElementById("playerBet").value;
     bet.amount = pBet.replace(/\D/g, '');
     bet.player = "You";
+    if(bet.amount <= 100000){
+      bet.timer = 500;
+    }
     var playernameandamount = document.createElement("P");
     playernameandamount.innerText = "You" + " - " + numberWithCommas(numberWithCommas(pBet)) + " gumpshrooms";
     playernameandamount.setAttribute("id", pBet);
     var retractbetbutton = document.createElement("button");
+    
     retractbetbutton.setAttribute("id", pBet);
     retractbetbutton.setAttribute("onclick", "retractBet(" + pBet + ")");
+    retractbetbutton.setAttribute("style", "display:block;margin-right:auto;margin-left:auto")
     retractbetbutton.innerHTML = "Retract";
     document.getElementById("yourbet-container").appendChild(playernameandamount);
     document.getElementById("yourbet-container").appendChild(retractbetbutton);
@@ -94,6 +100,16 @@ function betTaken(betamount) {
     node.removeChild(document.getElementById(betamount));
     node.removeChild(document.getElementById(betamount));
     var gain = parseInt(parseInt(betamount) + parseInt(Math.floor(betamount * houseCut)));
+    if(betamount <= 100000){
+      $(document).ready(function () {
+
+      $.notify("Saklad5 took your " + numberWithCommas(betamount) + " gumpshroom bet, and you won, \n earning you " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
+        className: "success",
+        globalPosition: 'top center'
+      }
+      );
+    });
+    } else {
     $(document).ready(function () {
 
       $.notify(randName() + " took your " + numberWithCommas(betamount) + " gumpshroom bet, and you won, \n earning you " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
@@ -102,6 +118,7 @@ function betTaken(betamount) {
       }
       );
     });
+    }
     playerShrooms += parseInt(betamount);
     playerShrooms += parseInt(betamount * houseCut);
     getShrooms(playerShrooms);
@@ -110,6 +127,15 @@ function betTaken(betamount) {
   } else {
     node.removeChild(document.getElementById(betamount));
     node.removeChild(document.getElementById(betamount));
+    if(betamount <= 100000){
+      $(document).ready(function () {
+      $.notify("Saklad5 took your " + numberWithCommas(betamount) + " gumpshroom bet, and you lost. \n Better luck next time.", {
+        className: "error",
+        globalPosition: "top center"
+      }
+      );
+    });
+    } else {
     $(document).ready(function () {
       $.notify(randName() + " took your " + numberWithCommas(betamount) + " gumpshroom bet, and you lost. \n Better luck next time.", {
         className: "error",
@@ -117,6 +143,7 @@ function betTaken(betamount) {
       }
       );
     });
+    }
     if (playerShrooms <= 0) {
       playerShrooms = 0;
       $.notify("You're broke!", "error");
@@ -229,14 +256,18 @@ function updateNPCBets() {
   var bets = postNewBets();
   for (i = 0; i < bets.length; i++) {
     var playernameandamount = document.createElement("P");
-    playernameandamount.innerText = bets[i].player + " - " + numberWithCommas(bets[i].amount) + " gumpshrooms";
+    playernameandamount.innerText = bets[i].player + " - " + numberWithCommas(bets[i].amount) + " gumpshrooms --- ";
     playernameandamount.setAttribute("id", bets[i].amount);
     var takebetbutton = document.createElement("button");
+    if(playerShrooms < bets[i].amount){
+      takebetbutton.setAttribute("disabled", "");
+      takebetbutton.setAttribute("style", "color:gray");
+    }
     takebetbutton.setAttribute("id", bets[i].amount);
     takebetbutton.setAttribute("onclick", "takeBet(" + bets[i].amount + ")");
     takebetbutton.innerHTML = "Take Bet";
     document.getElementById("bet-container").appendChild(playernameandamount);
-    document.getElementById("bet-container").appendChild(takebetbutton);
+    document.getElementById(bets[i].amount).appendChild(takebetbutton);
   }
 }
 
