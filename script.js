@@ -1,40 +1,150 @@
 /* PROBLEM CODE HERE*/
-//var playerShrooms = localStorage.getItem('playerShrooms') || getRandomInt() * 50000000) + 20000000;
-var playerShrooms = /*prompt("How many gumpshrooms would you like to start with?",*/getRandomInt(50000000, 70000000)/*).replace(/\D/g, '')*/;
+//var playerShrooms = localStorage.getItem('playerShrooms') || getRandomInt() * 50000000) + 20000000; 
+var playerShrooms = /*prompt("How many gumpshrooms would you like to start with?",*/getRandomInt(20000000, 45000000)/*).replace(/\D/g, '')*/;
 var houseCut = 0.98;
+var chance = 50;
 //PROBLEM CODE??
 /*if(playerShrooms > 100000000){
   playerShrooms = 100000000;
 } else if(playerShrooms < 1000000){
   playerShrooms = 1000000;
 }*/
+/*let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+  btnAdd.style.display = 'block';
+});
+btnAdd.addEventListener('click', (e) => {
+  // hide our user interface that shows our A2HS button
+  btnAdd.style.display = 'none';
+  // Show the prompt
+  deferredPrompt.prompt();
+  // Wait for the user to respond to the prompt
+  deferredPrompt.userChoice
+    .then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the A2HS prompt');
+      } else {
+        console.log('User dismissed the A2HS prompt');
+      }
+      deferredPrompt = null;
+    });
+});
+*/
+
+function hideToggle(button, elem) {
+  $(button).toggle( function () {
+    $(elem).hide();
+  },function () {
+    $(elem).show();
+  });
+}
+//hideToggle(".togglechat", ".chat");
+
+
 
 $(document).ready(function () {
-  $.notify.defaults({ globalPosition: 'top center', autoHide: false });
+  
+  $.notify.defaults({ globalPosition: 'top center', autoHide: false, showDuration:0, hideDuration:0 });
+  $.notify.addStyle('mmg', {
+  html: "<div><span data-notify-text/></div>",
+  classes: {
+    base: {
+      //"white-space": "nowrap",
+      "background-color": "white",
+      "padding": "5px",
+      "display": "block",
+      "margin-left": "-73%",
+      "margin-right": "auto",
+      "border-color": "black",
+      "border-radius": "10px",
+        border:"1px solid #000000"
+    },
+    win: {
+      "color": "black",
+      "background-color": "white"
+    },
+    lose: {
+      "color": "black",
+      "background-color": "white"
+    },
+    won: {
+      "color": "green",
+      "background-color": "white"
+    },
+    lost: {
+      "color": "red",
+      "background-color": "white"
+    }
+    
+  }
+});
 });
 
-function changeHouseCut() {
-  houseCut = (100 - document.getElementById("changeHouseCut").value) / 100;
-  getHouseCut(houseCut);
+function toggleChat(){
+  var chatcontainer=document.getElementById("chat-container");
+  var chat=document.createElement("iframe");
+  if(document.getElementById("chat")){
+    chatcontainer.removeChild(document.getElementById("chat"));
+  }else{
+  chat.setAttribute("src", "chat.html");
+  //chat.setAttribute("style", "display:block;margin-right:auto;margin-left:auto");
+  chat.setAttribute("style", "z-index:1;position:absolute;background-color:white;right:0px;");
+  chat.setAttribute("id", "chat");
+  //chat.setAttribute("onload", "setIframeSize(this.id)");
+  chat.setAttribute("height", "100%");
+  chatcontainer.appendChild(chat);
+  document.getElementById("chat").style.width = $(document).width() - 0.7 * $(document).width() +"px";
+  //document.getElementById("chat").style.height = $(document).height()+"px";
+  }
 }
 
+function changeHouseCut() {
+  var housecutcandidate = document.getElementById("changeHouseCut").value;
+  
+  houseCut = (100 - housecutcandidate.replace(/\D/g, '')) / 100;
+  getHouseCut(houseCut);
+}
+function changeChance() {
+  var chancecandidate = document.getElementById("changeChance").value;
+  chance = chancecandidate.replace(/\D/g, '');
+  if(chance > 100){
+    $.notify("What's the point of setting it higher than 100%?", {
+      style:'mmg',
+      className: 'win',
+      globalPosition: 'top center'
+    });
+    chance = 100;
+  }
+  getChance(chance);
+  
+}
 function getHouseCut(hc) {
 
   document.getElementById("houseCutValue").innerHTML = numberWithCommas(Math.floor(100 - (hc * 100)));
 
 }
+function getChance(c) {
 
+  document.getElementById("chanceValue").innerHTML = numberWithCommas(c);
+
+}
 function getShrooms(shrooms) {
   document.getElementById("shroomValue").innerHTML = numberWithCommas(shrooms);
 }
 
 function changeShrooms() {
-  playerShrooms = document.getElementById("changeShrooms").value.replace(/\D/g, '');
+  var shroomsCandidate = document.getElementById("changeShrooms").value;
+  playerShrooms = shroomsCandidate.replace(/\D/g, '');
   getShrooms(playerShrooms);
 }
 
 function flip() {
-  if (Math.floor(Math.random() * 2) == 1) {
+  if (getRandomInt(1, 100) <= chance) {
     return true;
   } else {
     return false;
@@ -52,59 +162,103 @@ function numberWithCommas(nStr) {
   }
   return x1 + x2;
 }
+function getCount(parent, getChildrensChildren){
+    var relevantChildren = 0;
+    var children = parent.childNodes.length;
+    for(var i=0; i < children; i++){
+        //if(parent.childNodes[i].nodeType != 3){
+            if(getChildrensChildren)
+                relevantChildren += getCount(parent.childNodes[i],true);
+            relevantChildren++;
+        //}
+    }
+    return relevantChildren;
+}
+function checkTooManyBets(){
+  if(getCount(document.getElementById("yourbet-container"), false) <=5) {
+    return false;
+  } else {
+    return true;
+  }
+}
 
 function logBet() {
-  if (document.getElementById("playerBet").value > 100000000 || document.getElementById("playerBet").value < 1000) {
-    $.notify("Sorry, bets can only be between 1,000 and 100,000,000 shrooms.");
-  } else if (playerShrooms >= document.getElementById("playerBet").value) {
+  if (document.getElementById("playerBet").value.replace(/\D/g, '') > 100000000 || document.getElementById("playerBet").value.replace(/\D/g, '') < 1000) {
+    $.notify("Sorry, bets can only be between 1,000 and 100,000,000 shrooms.", {
+      style:'mmg',
+      className: 'win',
+      globalPosition: 'top center'
+    });
+  } else if (checkTooManyBets() == true) {
+    $.notify("You may only have up to 5 bets running at a time.", {
+      style:'mmg',
+      className: 'win',
+      globalPosition: 'top center'
+    });
+  } else if (playerShrooms >= document.getElementById("playerBet").value.replace(/\D/g, '')) {
     var bet = {
       amount: 0,
       player: "",
       taken: false,
-      won: false,
+      //won: false,
       timer: (Math.random() * 10000) + 50
     };
     
-    var pBet = document.getElementById("playerBet").value;
-    bet.amount = pBet.replace(/\D/g, '');
+    var pBet = document.getElementById("playerBet").value.replace(/\D/g, '');
+    bet.amount = pBet;
     bet.player = "You";
     if(bet.amount <= 100000){
       bet.timer = 500;
     }
+    var idtag = getRandomInt(1, 10000);
     var playernameandamount = document.createElement("P");
-    playernameandamount.innerText = "You" + " - " + numberWithCommas(numberWithCommas(pBet)) + " gumpshrooms";
-    playernameandamount.setAttribute("id", pBet);
+    playernameandamount.innerText = "You" + " - " + numberWithCommas(numberWithCommas(pBet)) + " gumpshrooms --- ";
+    playernameandamount.setAttribute("id", pBet.toString() + idtag.toString());
+    //playernameandamount.setAttribute("style", "display:inline-block;margin-right:auto;margin-left:auto; text-align:center")
     var retractbetbutton = document.createElement("button");
     
     retractbetbutton.setAttribute("id", pBet);
-    retractbetbutton.setAttribute("onclick", "retractBet(" + pBet + ")");
-    retractbetbutton.setAttribute("style", "display:block;margin-right:auto;margin-left:auto")
+    retractbetbutton.setAttribute("onclick", "retractBet(" + pBet + "," + idtag + ")");
+    //retractbetbutton.setAttribute("style", "display:inline-block;margin-right:auto;margin-left:auto; text-align:center")
     retractbetbutton.innerHTML = "Retract";
+    //document.getElementById("yourbet-container").appendChild(retractbetbutton);
     document.getElementById("yourbet-container").appendChild(playernameandamount);
-    document.getElementById("yourbet-container").appendChild(retractbetbutton);
+    document.getElementById(pBet.toString() + idtag.toString()).appendChild(retractbetbutton);
     playerShrooms = playerShrooms - pBet;
     update();
     refresh();
-    setTimeout(betTaken, bet.timer, pBet);
+    
+    setTimeout(betTaken, bet.timer, pBet, idtag);
+    
     return bet;
   } else {
-    $.notify("You don't have enough gumpshrooms to place that bet!", "info");
+    $.notify("You don't have enough gumpshrooms to place that bet!", {
+      style:'mmg',
+      className: 'win',
+      globalPosition: 'top center'
+    });
   }
 }
 
-function betTaken(betamount) {
+function betTaken(betamount, tag) {
+var node = document.getElementById("yourbet-container");
 
-  var node = document.getElementById("yourbet-container");
+if(!document.getElementById(betamount.toString() + tag.toString())){
+  
+} else {
+  
   if (flip() == true) {
-
-    node.removeChild(document.getElementById(betamount));
-    node.removeChild(document.getElementById(betamount));
+    //var node = document.getElementById("yourbet-container");
+  document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount));
+  node.removeChild(document.getElementById(betamount.toString() + tag.toString()));
+    
     var gain = parseInt(parseInt(betamount) + parseInt(Math.floor(betamount * houseCut)));
     if(betamount <= 100000){
       $(document).ready(function () {
 
       $.notify("Saklad5 took your " + numberWithCommas(betamount) + " gumpshroom bet, and you won, \n earning you " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
-        className: "success",
+        style: 'mmg',
+        className: "won",
         globalPosition: 'top center'
       }
       );
@@ -112,8 +266,9 @@ function betTaken(betamount) {
     } else {
     $(document).ready(function () {
 
-      $.notify(randName() + " took your " + numberWithCommas(betamount) + " gumpshroom bet, and you won, \n earning you " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
-        className: "success",
+      $.notify(randName() + " took your " + numberWithCommas(betamount) + " gumpshroom bet, and you won, \n earning you " + numberWithCommas(gain.toString()) + " gumpshrooms. ", {
+        style: 'mmg',
+        className: "won",
         globalPosition: 'top center'
       }
       );
@@ -125,20 +280,23 @@ function betTaken(betamount) {
     //localStorage.setItem('playerShrooms', playerShrooms);
 
   } else {
-    node.removeChild(document.getElementById(betamount));
-    node.removeChild(document.getElementById(betamount));
+    //var node = document.getElementById("yourbet-container");
+  document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount));
+  node.removeChild(document.getElementById(betamount.toString() + tag.toString()));
     if(betamount <= 100000){
       $(document).ready(function () {
       $.notify("Saklad5 took your " + numberWithCommas(betamount) + " gumpshroom bet, and you lost. \n Better luck next time.", {
-        className: "error",
-        globalPosition: "top center"
+        style: 'mmg',
+        className: "lost",
+        globalPosition: 'top center'
       }
       );
     });
     } else {
     $(document).ready(function () {
       $.notify(randName() + " took your " + numberWithCommas(betamount) + " gumpshroom bet, and you lost. \n Better luck next time.", {
-        className: "error",
+        style: 'mmg',
+        className: "lost",
         globalPosition: "top center"
       }
       );
@@ -146,7 +304,11 @@ function betTaken(betamount) {
     }
     if (playerShrooms <= 0) {
       playerShrooms = 0;
-      $.notify("You're broke!", "error");
+      $.notify("You're broke!", {
+      style:'mmg',
+      className: 'win',
+      globalPosition: 'top center'
+    });
     }
     getShrooms(playerShrooms);
     //localStorage.setItem('playerShrooms', playerShrooms);
@@ -154,11 +316,13 @@ function betTaken(betamount) {
 
   }
 }
+}
 
 function update() {
   getShrooms(playerShrooms);
   updateNPCBets();
   getHouseCut(houseCut);
+  getChance(chance);
   //localStorage.setItem('playerShrooms', playerShrooms);
 }
 /*var randName1 = randName();
@@ -173,6 +337,7 @@ function postNewBets() {
 
   var bets = []
   for (i = 0; i < getRandomInt(1, 10); i++) {
+    var forceonline = false;
     var bet = {
       amount: 0,
       player: "",
@@ -181,10 +346,14 @@ function postNewBets() {
     };
     if (i == 0) {
       bet.player = "Saklad5";
-    } else if(i == 2){
+    } else if(getRandomInt(1, 8) == 3){
       bet.player = "ninjin_joshi";
     } else {
       bet.player = randName();
+    }
+    if(getRandomInt(1, 5) == 3 || forceonline == true){
+      bet.player = "mr_bibiloni";
+      forceonline = true;
     }
     if (bet.player == "Saklad5") {
       var selector = getRandomInt(0, 13);
@@ -216,6 +385,8 @@ function postNewBets() {
       } else if (selector == 12 || selector == 13){
         bet.amount = 70000000;
       }
+    } else if(bet.player == "mr_bibiloni"){
+      bet.amount = 100000000;
     } else {
       var selector = getRandomInt(0, 10);
       if (selector == 0) {
@@ -255,9 +426,10 @@ function getRandomInt(min, max) {
 function updateNPCBets() {
   var bets = postNewBets();
   for (i = 0; i < bets.length; i++) {
+    var idtag = getRandomInt(1, 10000);
     var playernameandamount = document.createElement("P");
     playernameandamount.innerText = bets[i].player + " - " + numberWithCommas(bets[i].amount) + " gumpshrooms --- ";
-    playernameandamount.setAttribute("id", bets[i].amount);
+    playernameandamount.setAttribute("id", bets[i].amount.toString() + idtag.toString());
     var takebetbutton = document.createElement("button");
     if(playerShrooms < bets[i].amount){
       takebetbutton.setAttribute("disabled", "");
@@ -267,7 +439,7 @@ function updateNPCBets() {
     takebetbutton.setAttribute("onclick", "takeBet(" + bets[i].amount + ")");
     takebetbutton.innerHTML = "Take Bet";
     document.getElementById("bet-container").appendChild(playernameandamount);
-    document.getElementById(bets[i].amount).appendChild(takebetbutton);
+    document.getElementById(bets[i].amount.toString() + idtag.toString()).appendChild(takebetbutton);
   }
 }
 
@@ -282,12 +454,15 @@ function refresh() {
 
 
 
-function retractBet(betamount) {
+function retractBet(betamount, tag) {
   var node = document.getElementById("yourbet-container");
-  node.removeChild(document.getElementById(betamount));
-  node.removeChild(document.getElementById(betamount));
+  document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount));
+  node.removeChild(document.getElementById(betamount.toString() + tag.toString()));
+  
   playerShrooms = playerShrooms + betamount;
-  update();
+  getShrooms(playerShrooms);
+  //updateNPCBets();
+  getHouseCut(houseCut);
   refresh();
 }
 function takeBet(betamount) {
@@ -301,41 +476,51 @@ function takeBet(betamount) {
       $(document).ready(function () {
 
         var gain = parseInt(parseInt(betamount) + parseInt(Math.floor(betamount * houseCut)));
-        $.notify("You bet " + numberWithCommas(betamount) + " gumpshrooms. \n \n" +
-          "You wipe cold sweat from your brow. \n Nausea twists in your guts. The game begins. \n \"The coin doesn\'t matter,\" says the old man. \n \"your stupid lizard brain will do what it has been programmed by evolution to do.\" " + "\n \n" +
+        $.notify("🍄 You bet " + numberWithCommas(betamount) + " gumpshrooms. \n \n" +
+          "You wipe cold sweat from your brow. \n Nausea twists in your guts. The game begins. \n \"The coin doesn\'t matter,\" says the old man. \n \"your stupid lizard brain will do what it \n has been programmed by evolution to do.\" " + "\n \n" +
           "The coin is nonsense. Fake, meaningless nonsense. \n Stop doing this. " + "\n \n" +
           "MEANINGLESS " + "\n \n" +
-          "You gain " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
-            className: "success",
-            globalPosition: 'top center'
-          }
+          "🍄 You gain " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
+        style: 'mmg',
+        className: "win",
+        globalPosition: 'top center'
+      }
         );
       });
 
       playerShrooms = parseInt(parseInt(playerShrooms) + parseInt(Math.floor(betamount * houseCut)));
 
       //localStorage.setItem('playerShrooms', playerShrooms);
-      update();
+      getShrooms(playerShrooms);
+  updateNPCBets();
+  getHouseCut(houseCut);
     } else {
       while (node.firstChild) {
         node.removeChild(node.firstChild);
       }
       $(document).ready(function () {
-        $.notify("You bet " + numberWithCommas(betamount) + " gumpshrooms. \n \n" +
-          "You wipe cold sweat from your brow. \n Nausea twists in your guts. The game begins. \n \"The coin doesn\'t matter,\" says the old man. \n \"your stupid lizard brain will do what it has been programmed by evolution to do.\" " + "\n \n" +
+        $.notify("🍄 You bet " + numberWithCommas(betamount) + " gumpshrooms. \n \n" +
+          "You wipe cold sweat from your brow. \n Nausea twists in your guts. The game begins. \n \"The coin doesn\'t matter,\" says the old man. \n \"your stupid lizard brain will do what it \n has been programmed by evolution to do.\" " + "\n \n" +
           "The coin is nonsense. Fake, meaningless nonsense. \n Stop doing this. " + "\n \n" +
           "MEANINGLESS You lost... Why are you still doing this.\"", {
-            className: "error",
-            globalPosition: "top center"
-          }
+        style: 'mmg',
+        className: "lose",
+        globalPosition: 'top center'
+      }
         );
       });
       playerShrooms = playerShrooms - betamount;
       //localStorage.setItem('playerShrooms', playerShrooms);
-      update();
+      getShrooms(playerShrooms);
+  updateNPCBets();
+  getHouseCut(houseCut);
     }
   } else {
-    $.notify("You don't have enough gumpshrooms to take that bet!", "info");
+    $.notify("You don't have enough gumpshrooms to take that bet!", {
+      style:'mmg',
+      className: 'win',
+      globalPosition: 'top center'
+    });
   }
 
 }

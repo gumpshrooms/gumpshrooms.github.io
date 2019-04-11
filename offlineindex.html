@@ -13,12 +13,10 @@
 </head>
 
 <body onload="update()">
-	<div id="chat-container"></div>
+	
   <table  width=100% cellspacing=0 cellpadding=0><tr><td style="color: white;" align=center bgcolor=blue><b>Money Making Game (Terrible)</b></td></tr></table>
-
-  
   <br>
-  <button style="display:block"id="togglechat" onclick="toggleChat()">Toggle Chat</button>
+  
   
     <br><button style="display:block;margin-right:auto;margin-left:auto" onclick="refresh()">Refresh Bets</button><br>
     <p><b>Last 20 fools and their gumpshrooms:</b></p>
@@ -30,7 +28,7 @@
 
     </span>
     <br>
-    <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">You have <b><span id="shroomValue"></span></b> gumpshroom(s) on hand. </p><p>Bets can be between 1,000 shrooms and 100,000,000 shrooms.</p>
+    <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">You have <b><span id="shroomValue"></span></b> gumpshroom(s) on hand.</p><p>Bets can be between 1,000 shrooms and 100,000,000 shrooms.</p>
     <p>You may have up to five bets running at a time.</p>
     
     <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">Place a bet:</p>
@@ -52,10 +50,11 @@
     <input id="changeHouseCut"></input>
     <button style="display:block;margin-right:auto;margin-left:auto" onclick="changeHouseCut()">Change it up!</button>
     <br>
-    <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">Custom win chance (Current: <span id="chanceValue"></span>%):</p>
+     <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">Custom win chance (Current: <span id="chanceValue"></span>%):</p>
     <input id="changeChance"></input>
     <button style="display:block;margin-right:auto;margin-left:auto" onclick="changeChance()">Change it up!</button>
     <br>
+    
     
   </body>
 </html>
