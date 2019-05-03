@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>gumpshroom gambling</title>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+	<script src="jquery.min.js">
+	</script>
+
+	<script src="notify.min.js">
+	</script>
+  <script src="sweetalert2.min.js"></script>
+
+	<script src="storyscript.js">
+	</script>
+
+
+</head>
+
+<body onload="update()">
+	<div id="chat-container"></div>
+	<table width=100% cellspacing=0 cellpadding=0>
+		<tr>
+			<td style="color: white;" align=center bgcolor=blue><b>Money Making Game: Story Mode</b></td></tr></table>
+
+
+  <br>
+  <div style='text-align: center'><button style="display:inline-block;margin-right:auto;margin-left:auto" onclick="location.href='index.html'">Play Sandbox Mode</button>
+  <button style="display:inline-block" onclick="reset()">Reset Game</button>
+  <button style="display:inline-block"id="togglechat" onclick="toggleChat()">Toggle Chat</button>
+</div>
+<br>
+<div style="text-align:center">
+	<a href="shame.html" style="display:inline-block; color:black">Look at your shame</a>
+</div>
+    <br>
+    <hr width=50% align=center>
+    <button style="display:block;margin-right:auto;margin-left:auto" onclick="refresh()">Refresh Bets (R)</button>
+
+    <p><b>Last 10 fools and their gumpshrooms:</b></p>
+    <span id="bet-container">
+
+    </span>
+    <hr width=50% align=center>
+    <p style="text-align:center;display:block;margin-right:auto;margin-left:auto"><b>Your Bets:</b></p>
+    <span id="yourbet-container">
+
+    </span>
+    <br>
+    <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">You have <b><span id="shroomValue"></span></b> gumpshroom(s) on hand. </p><p>Bets can be between 1,000 shrooms and 100,000,000 shrooms.</p>
+    <p>You may have up to five bets running at a time.</p>
+
+
+    <p style="text-align:center;display:block;margin-right:auto;margin-left:auto">Place a bet:</p>
+    <input id="playerBet">
+    <button style="display:block;margin-right:auto;margin-left:auto" onclick="logBet()">Place Bet</button>
+    <br>
+    <hr width=50% align=center>
+    <p><b style="font-size:30px">Shop</b></p>
+    <div style='text-align:center'><p style='display:inline'>You have <b style='display:inline'><span id='quags' style='display:inline'></span></b> quaggies.</p></div> <br><button onclick="sellQuaggy()" style="display:block;margin-right:auto;margin-left:auto">Sell a quaggy at 95% market price (<span id='quagprice' style='display:inline'></span> gumpshrooms)</button><br>
+    <center>
+<table cellspacing=5>
+
+   <tr>
+      <td align=center><b>Item</b></td>
+      <td align=center><b>Cost</b></td>
+
+   </tr>
+
+   <tr>
+      <td><font size=-1><b>1 quaggy</b></font></td>
+      <td><span id='quagprice2'></span> gumpshrooms</td>
+      <div style='display: inline'>
+         <td align=right><button onclick='buyQuaggy()'>Buy</button></td>
+         <td>&nbsp;</td>
+      </div>
+      </td>
+   </tr>
+   <tr>
+      <td><font size=-1><b>House cut -0.1% (Current: <span id="houseCutValue"></span>%) </b></font></td>
+      <td><span id='cutquags'></span> quaggies</td>
+      <div style='display: inline'>
+         <td align=right><button onclick="changeHouseCut()">Buy</button></td>
+         <td>&nbsp;</td>
+      </div>
+      </td>
+   </tr>
+   <tr>
+      <td><font size=-1><b>Win Chance +1% (Current: <span id="chanceValue"></span>%)</b></font></td>
+      <td><span id='chancequags'></span> quaggies</td>
+      <div style='display: inline'>
+         <td align=right><button onclick="changeChance()">Buy</button></td>
+         <td>&nbsp;</td>
+      </div>
+      </td>
+   </tr>
+   <tr>
+      <td><font size=-1><b>+1 Adventurer (<span id="adventurersValue2"></span> quaggies/hr)<br> (Current: <span id="adventurersValue"></span> adventurers)</b></font></td>
+      <td><span id='adventurerquags'></span> quaggies</td>
+      <div style='display: inline'>
+         <td align=right><button onclick="buyAdventurer()">Buy</button></td>
+         <td>&nbsp;</td>
+      </div>
+      </td>
+   </tr>
+
+</table>
+    <br>
+
+    <br>
+
+  </body>
+
+</html>

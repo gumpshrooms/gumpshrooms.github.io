@@ -1,12 +1,26 @@
+var playerShrooms = localStorage.getItem('playerShrooms') || 15000000;
+localStorage.setItem('playerShrooms', playerShrooms);
+var tutorialDid = localStorage.getItem('tutorialDid') || false;
+localStorage.setItem('tutorialDid', tutorialDid);
+var houseCut = localStorage.getItem('housecut') || 0.98;
+var chance = localStorage.getItem('chance') || 50;
+var quagprice = 30000000;
+var playerQuaggies = localStorage.getItem('playerQuaggies') || 1;
+var changeCutCost = localStorage.getItem('changeCutCost') || 1;
+var changeChanceCost = localStorage.getItem('changeChanceCost') || 2;
+var adventurers = localStorage.getItem('adventurers') || 0;
+var buyAdventurerCost = localStorage.getItem('buyAdventurerCost') || 10;
+if (localStorage.getItem('yourbetHistory') == null) {
+  localStorage.setItem('yourbetHistory', "");
+}
+if (localStorage.getItem('betHistory') == null) {
+  localStorage.setItem('betHistory', "");
+}
+if (adventurers != 0) {
+  var repeater = setInterval(addQuaggies, 600000); // call every 1000 milliseconds
+}
 
-var playerShrooms = getRandomInt(20000000, 45000000);
-var houseCut = 0.98;
-var chance = 50;
-document.addEventListener("keypress", function onEvent(event) {
-  if (event.key === "r") {
-    refresh();
-  }
-});
+
 
 $(document).ready(function () {
 
@@ -40,10 +54,17 @@ $(document).ready(function () {
       lost: {
         "color": "red",
         "background-color": "white"
+      },
+      start: {
+        "color": "blue",
+        "background-color": "white",
+        "autoHide": "true",
+        "autoHideDelay": "2000"
       }
 
     }
   });
+
 });
 
 function toggleChat() {
@@ -63,47 +84,213 @@ function toggleChat() {
     //document.getElementById("chat").style.height = $(document).height()+"px";
   }
 }
+function reset() {
+  clearInterval(repeater);
+  Swal.fire({
+    title: 'Wait!',
+    text: "Are you sure you want to reset?",
+    type: 'warn',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.value) {
+      localStorage.clear();
+      location.reload();
 
+    }
+  })
+}
 function changeHouseCut() {
-  var housecutcandidate = document.getElementById("changeHouseCut").value;
+  if (houseCut == 1) {
+    Swal.fire(
+      'Woops!',
+      "The house cut is already 0%!",
+      'error'
+    );
+  } else if (playerQuaggies >= changeCutCost) {
+    playerQuaggies = playerQuaggies - changeCutCost;
+    changeCutCost = parseInt(changeCutCost) + 1;
+    localStorage.setItem('playerQuaggies', playerQuaggies);
+    localStorage.setItem('changeCutCost', changeCutCost);
 
-  houseCut = (100 - housecutcandidate.replace(/\D/g, '')) / 100;
+    houseCut = houseCut + 0.001;
+    localStorage.setItem('houseCut', houseCut);
+    refresh();
+    update();
+    Swal.fire(
+      'Success!',
+      'Thanks for your patronage!',
+      'success'
+    );
+
+  } else {
+    Swal.fire(
+      'Woops!',
+      "You don't have enough quaggies!",
+      'error'
+    );
+
+  }
+
   getHouseCut(houseCut);
 }
-function changeChance() {
-  var chancecandidate = document.getElementById("changeChance").value;
-  chance = chancecandidate.replace(/\D/g, '');
-  if (chance > 100) {
-    $.notify("What's the point of setting it higher than 100%?", {
-      style: 'mmg',
-      className: 'win',
-      globalPosition: 'top center'
-    });
-    chance = 100;
+function getCutPrice() {
+  document.getElementById("cutquags").innerHTML = changeCutCost;
+}
+function getChancePrice() {
+  document.getElementById("chancequags").innerHTML = changeChanceCost;
+}
+function buyAdventurer() {
+
+  // call every 1000 milliseconds
+
+  if (adventurers == 10) {
+    Swal.fire("Woops!", "You're not allowed to have more that 10 adventurers. That'd be unfair!", "error");
+  } else if (parseInt(playerQuaggies) >= buyAdventurerCost) {
+    playerQuaggies = parseInt(playerQuaggies) - parseInt(buyAdventurerCost);
+    buyAdventurerCost = Math.round(buyAdventurerCost * 2.2) + 1;
+    localStorage.setItem('playerQuaggies', playerQuaggies);
+    localStorage.setItem('buyAdventurerCost', buyAdventurerCost);
+
+    adventurers = parseInt(adventurers) + 1;
+    localStorage.setItem('adventurers', adventurers);
+    if (!repeater) {
+      var repeater = setInterval(addQuaggies, 600000);
+    }
+    update();
+    Swal.fire(
+      'Success!',
+      "Thanks for your patronage!",
+      'success'
+    );
+  } else {
+    Swal.fire(
+      'Woops!',
+      "You don't have enough quaggies!",
+      'error'
+    );
   }
   getChance(chance);
 
 }
+function getAdventurerPrice() {
+  document.getElementById("adventurerquags").innerHTML = buyAdventurerCost;
+}
+function getAdventurers() {
+  document.getElementById('adventurersValue').innerHTML = adventurers;
+  document.getElementById('adventurersValue2').innerHTML = adventurers;
+
+}
+function addQuaggies() {
+  playerQuaggies = parseInt(playerQuaggies) + parseInt(adventurers);
+  localStorage.setItem('playerQuaggies', playerQuaggies);
+  getQuaggies();
+}
+function changeChance() {
+  if (chance == 60) {
+    Swal.fire(
+      'Woops!',
+      "You can't make the chance higher than 60%. That's unfair!",
+      'error'
+    );
+  } else if (parseInt(playerQuaggies) >= changeChanceCost) {
+    playerQuaggies = parseInt(playerQuaggies) - parseInt(changeChanceCost);
+    changeChanceCost = Math.round(changeChanceCost * 1.2) + 1;
+    localStorage.setItem('playerQuaggies', playerQuaggies);
+    localStorage.setItem('changeChanceCost', changeChanceCost);
+
+    chance = parseInt(chance) + 1;
+    localStorage.setItem('chance', chance);
+    refresh();
+    update();
+    Swal.fire(
+      'Success!',
+      "Thanks for your patronage!",
+      'success'
+    );
+  } else {
+    Swal.fire(
+      'Woops!',
+      "You don't have enough quaggies!",
+      'error'
+    );
+  }
+  getChance(chance);
+
+}
+
 function getHouseCut(hc) {
 
-  document.getElementById("houseCutValue").innerHTML = numberWithCommas(Math.floor(100 - (hc * 100)));
+  document.getElementById("houseCutValue").innerHTML = Math.round(10 * (100 - (hc * 100))) / 10;
 
 }
 function getChance(c) {
 
-  document.getElementById("chanceValue").innerHTML = numberWithCommas(c);
+  document.getElementById("chanceValue").innerHTML = Math.round(c);
 
 }
 function getShrooms(shrooms) {
   document.getElementById("shroomValue").innerHTML = numberWithCommas(shrooms);
 }
+function buyQuaggy() {
+  if (playerShrooms >= quagprice) {
+    playerShrooms = playerShrooms - quagprice;
+    localStorage.setItem('playerShrooms', playerShrooms);
+    playerQuaggies = parseInt(playerQuaggies) + 1;
+    localStorage.setItem('playerQuaggies', playerQuaggies);
+    refresh();
+    update();
+    Swal.fire(
+      'Success!',
+      "Thanks for your patronage!",
+      'success'
+    );
+  } else {
+    Swal.fire(
+      'Woops!',
+      "You don't have enough gumpshrooms to buy a quaggy!",
+      'error'
+    );
+  }
+}
+function sellQuaggy() {
+  if (playerQuaggies >= 1) {
+    playerShrooms = parseInt(playerShrooms) + Math.round(parseInt(quagprice) * 0.95);
+    localStorage.setItem('playerShrooms', playerShrooms);
+    playerQuaggies = parseInt(playerQuaggies) - 1;
+    localStorage.setItem('playerQuaggies', playerQuaggies);
 
-function changeShrooms() {
+    Swal.fire(
+      'Success!',
+      "You sold a quaggy for " + numberWithCommas(Math.round(parseInt(quagprice) * 0.95)) + " gumpshrooms.",
+      'success'
+    );
+    refresh();
+    update();
+  } else {
+    Swal.fire(
+      'Woops!',
+      "You don't have any quaggies to sell!",
+      'error'
+    );
+  }
+}
+function getQuaggies() {
+  document.getElementById('quags').innerHTML = numberWithCommas(playerQuaggies);
+}
+function changeQuagPrice() {
+  quagprice = getRandomInt(36000000, 38000000);
+  document.getElementById("quagprice").innerText = numberWithCommas(Math.round(parseInt(quagprice) * 0.95));
+  document.getElementById("quagprice2").innerText = numberWithCommas(quagprice);
+}
+
+/*function changeShrooms() {
   var shroomsCandidate = document.getElementById("changeShrooms").value;
   playerShrooms = shroomsCandidate.replace(/\D/g, '');
   getShrooms(playerShrooms);
 }
-
+*/
 function flip() {
   if (getRandomInt(1, 100) <= chance) {
     return true;
@@ -142,16 +329,7 @@ function checkTooManyBets() {
     return true;
   }
 }
-function redirectToStory() {
-  location.href = '/story.html';
-}
-function checkNoBets() {
-  if (getCount(document.getElementById("yourbet-container"), false) == 0) {
-    return false;
-  } else {
-    return true;
-  }
-}
+
 function logBet() {
   if (document.getElementById("playerBet").value.replace(/\D/g, '') > 100000000 || document.getElementById("playerBet").value.replace(/\D/g, '') < 1000) {
     $.notify("Sorry, bets can only be between 1,000 and 100,000,000 shrooms.", {
@@ -180,15 +358,16 @@ function logBet() {
     if (bet.amount <= 100000) {
       bet.timer = 500;
     }
-    var idtag = getRandomInt(1, 10000);
+    var idtag = getRandomInt(1, 1000000);
     var playernameandamount = document.createElement("P");
     playernameandamount.innerText = "You" + " - " + numberWithCommas(numberWithCommas(pBet)) + " gumpshrooms --- ";
     playernameandamount.setAttribute("id", pBet.toString() + idtag.toString());
     //playernameandamount.setAttribute("style", "display:inline-block;margin-right:auto;margin-left:auto; text-align:center")
     var retractbetbutton = document.createElement("button");
 
-    retractbetbutton.setAttribute("id", pBet);
+    retractbetbutton.setAttribute("id", pBet.toString() + idtag.toString() + idtag.toString());
     retractbetbutton.setAttribute("onclick", "retractBet(" + pBet + "," + idtag + ")");
+
     //retractbetbutton.setAttribute("style", "display:inline-block;margin-right:auto;margin-left:auto; text-align:center")
     retractbetbutton.innerHTML = "Retract";
     //document.getElementById("yourbet-container").appendChild(retractbetbutton);
@@ -219,9 +398,9 @@ function betTaken(betamount, tag) {
 
     if (flip() == true) {
       //var node = document.getElementById("yourbet-container");
-      document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount));
+      document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount.toString() + tag.toString() + tag.toString()));
       node.removeChild(document.getElementById(betamount.toString() + tag.toString()));
-
+      localStorage.setItem('yourbetHistory', localStorage.getItem('yourbetHistory') + betamount + "(won)");
       var gain = parseInt(parseInt(betamount) + parseInt(Math.floor(betamount * houseCut)));
       if (betamount <= 100000) {
         $(document).ready(function () {
@@ -246,13 +425,15 @@ function betTaken(betamount, tag) {
       }
       playerShrooms += parseInt(betamount);
       playerShrooms += parseInt(betamount * houseCut);
-      getShrooms(playerShrooms);
-      //localStorage.setItem('playerShrooms', playerShrooms);
+      refresh();
+      //update();
+      localStorage.setItem('playerShrooms', playerShrooms);
 
     } else {
       //var node = document.getElementById("yourbet-container");
-      document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount));
+      document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount.toString() + tag.toString() + tag.toString()));
       node.removeChild(document.getElementById(betamount.toString() + tag.toString()));
+      localStorage.setItem('yourbetHistory', localStorage.getItem('yourbetHistory') + betamount + "(lost)");
       if (betamount <= 100000) {
         $(document).ready(function () {
           $.notify("Saklad5 took your " + numberWithCommas(betamount) + " gumpshroom bet, and you lost. \n Better luck next time.", {
@@ -272,32 +453,69 @@ function betTaken(betamount, tag) {
           );
         });
       }
-      if (playerShrooms <= 0) {
-        playerShrooms = 0;
-        $.notify("You're broke!", {
-          style: 'mmg',
-          className: 'win',
-          globalPosition: 'top center'
-        });
-      }
-      getShrooms(playerShrooms);
-      //localStorage.setItem('playerShrooms', playerShrooms);
+      update();
+      localStorage.setItem('playerShrooms', playerShrooms);
 
 
     }
   }
 }
+function lose() {
+  clearInterval(repeater);
+  Swal.fire({
+    title: 'Oops...',
+    text: "Game Over! You lost all your gumpshrooms...",
+    type: 'error',
+    showCancelButton: false,
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Try Again'
+  }).then((result) => {
+    if (result.value) {
+      localStorage.clear();
+      location.reload();
 
+    }
+  })
+
+}
 function update() {
+  if (tutorialDid === false) {
+    Swal.fire("Welcome!",
+      "Welcome to gumpshroom gambling: Story Mode! You'll be playing as a degenerate gambling addict with dreams to get rich. The goal of the game is to gamble your way to THREE BILLION gumpshrooms. And, without further ado, begin your journey by clicking OK. (Or don't click it. Your choice.)", 'info')
+    tutorialDid = true;
+    localStorage.setItem('tutorialDid', tutorialDid);
+  }
+  if (playerShrooms >= 3000000000) {
+    Swal.fire(
+      'CONGRATULATIONS!',
+      'You have attained 3 billion gumpshrooms and are now a gambling god.',
+      'success'
+    );
+  }
+  if (playerShrooms <= 0 && playerQuaggies <= 0) {
+    playerShrooms = 15000000;
+    playerQuaggies = 0;
+    lose();
+  }
   getShrooms(playerShrooms);
   updateNPCBets();
+  changeQuagPrice();
+  getChancePrice();
+  getCutPrice();
+  getQuaggies();
   getHouseCut(houseCut);
   getChance(chance);
-  //localStorage.setItem('playerShrooms', playerShrooms);
+  getAdventurerPrice();
+  getAdventurers();
+  localStorage.setItem('playerShrooms', playerShrooms);
 }
 /*var randName1 = randName();
 var randName2 = randName();
 var randName3 = randName();*/
+
+function martingale(lastBet) {
+
+}
 
 function postNewBets() {
 
@@ -415,20 +633,28 @@ function refresh() {
     node.removeChild(node.firstChild);
   }
   getHouseCut(houseCut);
-  update();
+  getShrooms(playerShrooms);
+  updateNPCBets();
+  changeQuagPrice();
+  //getHouseCut(houseCut);
+  getChance(chance);
+  localStorage.setItem('playerShrooms', playerShrooms);
 }
 
 
 
 function retractBet(betamount, tag) {
   var node = document.getElementById("yourbet-container");
-  document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount));
+  document.getElementById(betamount.toString() + tag.toString()).removeChild(document.getElementById(betamount.toString() + tag.toString() + tag.toString()));
   node.removeChild(document.getElementById(betamount.toString() + tag.toString()));
 
-  playerShrooms = parseInt(playerShrooms) + parseInt(betamount);
+  playerShrooms = playerShrooms + betamount;
   getShrooms(playerShrooms);
-  //updateNPCBets();
+  updateNPCBets();
+  changeQuagPrice();
   getHouseCut(houseCut);
+  getChance(chance);
+  localStorage.setItem('playerShrooms', playerShrooms);
   refresh();
 }
 function takeBet(betamount) {
@@ -440,53 +666,48 @@ function takeBet(betamount) {
         node.removeChild(node.firstChild);
       }
       $(document).ready(function () {
-
+        localStorage.setItem('betHistory', localStorage.getItem('betHistory') + betamount + "(won)");
         var gain = parseInt(parseInt(betamount) + parseInt(Math.floor(betamount * houseCut)));
-        $.notify("🍄 You bet " + numberWithCommas(betamount) + " gumpshrooms. \n \n" +
-          "You wipe cold sweat from your brow. \n Nausea twists in your guts. The game begins. \n \"The coin doesn\'t matter,\" says the old man. \n \"your stupid lizard brain will do what it \n has been programmed by evolution to do.\" " + "\n \n" +
-          "The coin is nonsense. Fake, meaningless nonsense. \n Stop doing this. " + "\n \n" +
-          "MEANINGLESS " + "\n \n" +
-          "🍄 You gain " + numberWithCommas(gain.toString()) + " gumpshrooms.", {
-            style: 'mmg',
-            className: "win",
-            globalPosition: 'top center'
-          }
-        );
+        Swal.fire("You bet " + numberWithCommas(betamount) + " gumpshrooms.",
+          "You wipe cold sweat from your brow. <br> Nausea twists in your guts. The game begins. <br> \"The coin doesn\'t matter,\" says the old man. <br> \"your stupid lizard brain will do what it <br> has been programmed by evolution to do.\" " + "<br>" +
+          "The coin is nonsense. Fake, meaningless nonsense. <br> Stop doing this. <br> " +
+          "MEANINGLESS " + "<br>" +
+          "🍄 You gain " + numberWithCommas(gain.toString()) + " gumpshrooms.", "success")
       });
 
       playerShrooms = parseInt(parseInt(playerShrooms) + parseInt(Math.floor(betamount * houseCut)));
 
-      //localStorage.setItem('playerShrooms', playerShrooms);
+      localStorage.setItem('playerShrooms', playerShrooms);
       getShrooms(playerShrooms);
+      changeQuagPrice();
       updateNPCBets();
       getHouseCut(houseCut);
     } else {
       while (node.firstChild) {
         node.removeChild(node.firstChild);
       }
+      localStorage.setItem('betHistory', localStorage.getItem('betHistory') + betamount + "(lost)");
       $(document).ready(function () {
-        $.notify("🍄 You bet " + numberWithCommas(betamount) + " gumpshrooms. \n \n" +
-          "You wipe cold sweat from your brow. \n Nausea twists in your guts. The game begins. \n \"The coin doesn\'t matter,\" says the old man. \n \"your stupid lizard brain will do what it \n has been programmed by evolution to do.\" " + "\n \n" +
-          "The coin is nonsense. Fake, meaningless nonsense. \n Stop doing this. " + "\n \n" +
-          "MEANINGLESS You lost... Why are you still doing this.\"", {
-            style: 'mmg',
-            className: "lose",
-            globalPosition: 'top center'
-          }
+        Swal.fire(
+          "You bet " + numberWithCommas(betamount) + " gumpshrooms.",
+          "You wipe cold sweat from your brow. <br> Nausea twists in your guts. The game begins. <br> \"The coin doesn\'t matter,\" says the old man. <br> \"your stupid lizard brain will do what it <br> has been programmed by evolution to do.\" " + "<br>" +
+          "The coin is nonsense. Fake, meaningless nonsense. <br> Stop doing this. <br> " +
+          "MEANINGLESS You lost... Why are you still doing this.\"", "error"
         );
       });
       playerShrooms = playerShrooms - betamount;
-      //localStorage.setItem('playerShrooms', playerShrooms);
+      localStorage.setItem('playerShrooms', playerShrooms);
       getShrooms(playerShrooms);
+      changeQuagPrice();
       updateNPCBets();
       getHouseCut(houseCut);
     }
   } else {
-    $.notify("You don't have enough gumpshrooms to take that bet!", {
-      style: 'mmg',
-      className: 'win',
-      globalPosition: 'top center'
-    });
+    Swal.fire(
+      'Woops!',
+      "You don't have enough gumpshrooms to take that bet!",
+      "error"
+    );
   }
 
 }
@@ -534,3 +755,9 @@ function randName() {
   }
   return name;
 };
+
+document.addEventListener("keypress", function onEvent(event) {
+  if (event.key === "r") {
+    refresh();
+  }
+});
